@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from 'recharts';
+import { Maximize2 } from 'lucide-react';
 import { SensorData } from '@/types/sensor';
+import FullScreenChart from './FullScreenChart';
 
 interface SensorChartProps {
   data: SensorData[];
@@ -29,41 +32,60 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 const SensorChart = ({ data, title, lines }: SensorChartProps) => {
+  const [fullScreen, setFullScreen] = useState(false);
+
   return (
-    <div className="glow-card rounded-xl bg-card p-5">
-      <h3 className="text-sm font-semibold text-foreground mb-4">{title}</h3>
-      <ResponsiveContainer width="100%" height={220}>
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 14% 16%)" />
-          <XAxis
-            dataKey="timestamp"
-            tickFormatter={formatTime}
-            tick={{ fill: 'hsl(215 12% 50%)', fontSize: 10 }}
-            stroke="hsl(220 14% 16%)"
+    <>
+      <div
+        className="glow-card rounded-xl bg-card p-5 cursor-pointer group transition-all hover:ring-1 hover:ring-accent/30"
+        onClick={() => setFullScreen(true)}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+          <Maximize2
+            size={14}
+            className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
           />
-          <YAxis
-            tick={{ fill: 'hsl(215 12% 50%)', fontSize: 10 }}
-            stroke="hsl(220 14% 16%)"
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <Legend
-            wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }}
-          />
-          {lines.map((line) => (
-            <Line
-              key={line.key}
-              type="monotone"
-              dataKey={line.key}
-              name={line.label}
-              stroke={line.color}
-              strokeWidth={2}
-              dot={false}
-              animationDuration={300}
+        </div>
+        <ResponsiveContainer width="100%" height={220}>
+          <LineChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 14% 16%)" />
+            <XAxis
+              dataKey="timestamp"
+              tickFormatter={formatTime}
+              tick={{ fill: 'hsl(215 12% 50%)', fontSize: 10 }}
+              stroke="hsl(220 14% 16%)"
             />
-          ))}
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
+            <YAxis
+              tick={{ fill: 'hsl(215 12% 50%)', fontSize: 10 }}
+              stroke="hsl(220 14% 16%)"
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
+            {lines.map((line) => (
+              <Line
+                key={line.key}
+                type="monotone"
+                dataKey={line.key}
+                name={line.label}
+                stroke={line.color}
+                strokeWidth={2}
+                dot={false}
+                animationDuration={300}
+              />
+            ))}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+      <FullScreenChart
+        open={fullScreen}
+        onOpenChange={setFullScreen}
+        data={data}
+        title={title}
+        lines={lines}
+      />
+    </>
   );
 };
 
