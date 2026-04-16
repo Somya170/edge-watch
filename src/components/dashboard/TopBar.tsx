@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Wifi, WifiOff } from 'lucide-react';
+import { Wifi, WifiOff, LayoutDashboard, Clock } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 
 interface TopBarProps {
   isConnected: boolean;
@@ -31,6 +32,10 @@ const TopBar = ({ isConnected, useMock }: TopBarProps) => {
       </div>
 
       <div className="flex items-center gap-4">
+        <nav className="flex items-center gap-1 mr-2">
+          <NavItem to="/" icon={LayoutDashboard} label="Dashboard" />
+          <NavItem to="/history" icon={Clock} label="History" />
+        </nav>
         <time className="text-sm text-muted-foreground font-mono hidden sm:block">
           {dateTime.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
           {' · '}
@@ -55,5 +60,21 @@ const TopBar = ({ isConnected, useMock }: TopBarProps) => {
     </header>
   );
 };
+
+function NavItem({ to, icon: Icon, label }: { to: string; icon: any; label: string }) {
+  const location = useLocation();
+  const active = location.pathname === to;
+  return (
+    <Link
+      to={to}
+      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+        active ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+      }`}
+    >
+      <Icon size={13} />
+      <span className="hidden sm:inline">{label}</span>
+    </Link>
+  );
+}
 
 export default TopBar;
