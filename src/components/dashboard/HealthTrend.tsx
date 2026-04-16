@@ -92,7 +92,7 @@ const HealthTrend = ({ data }: HealthTrendProps) => {
             </button>
           </div>
           <div className="flex-1 p-6 min-h-0">
-            {renderChart('100%', true)}
+            {renderChart("100%" as `${number}%`, true)}
           </div>
         </DialogContent>
       </Dialog>

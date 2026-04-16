@@ -97,7 +97,7 @@ const ForecastChart = ({ data, title, color, unit }: ForecastChartProps) => {
             </button>
           </div>
           <div className="flex-1 p-6 min-h-0">
-            {renderChart('100%')}
+            {renderChart("100%" as `${number}%`)}
           </div>
         </DialogContent>
       </Dialog>
