@@ -47,7 +47,7 @@ const ForecastChart = ({ data, title, color, unit }: ForecastChartProps) => {
     };
   });
 
-  const renderChart = (height: number | string) => (
+  const renderChart = (height: number | `${number}%`) => (
     <ResponsiveContainer width="100%" height={height}>
       <LineChart data={chartData}>
         <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 14% 16%)" />

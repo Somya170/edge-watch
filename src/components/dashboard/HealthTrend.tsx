@@ -27,7 +27,7 @@ const HealthTrend = ({ data }: HealthTrendProps) => {
   const diff = last - first;
   const trending = diff > 2 ? 'up' : diff < -2 ? 'down' : 'stable';
 
-  const renderChart = (height: number | string, showBrush = false) => (
+  const renderChart = (height: number | `${number}%`, showBrush = false) => (
     <ResponsiveContainer width="100%" height={height}>
       <AreaChart data={data}>
         <defs>
