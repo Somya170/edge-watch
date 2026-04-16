@@ -77,7 +77,16 @@ const ForecastChart = ({ data, title, color, unit }: ForecastChartProps) => {
             stroke={color}
             strokeWidth={2}
             dot={false}
-            strokeDasharray={(d: any) => d?.predicted ? '6 3' : '0'}
+            animationDuration={300}
+          />
+          <Line
+            type="monotone"
+            data={predicted.length > 0 ? [lastActual ? { ...lastActual, predicted: true } : predicted[0], ...predicted] : []}
+            dataKey="value"
+            stroke={color}
+            strokeWidth={2}
+            strokeDasharray="6 3"
+            dot={false}
             animationDuration={300}
           />
         </LineChart>
