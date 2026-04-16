@@ -1,4 +1,4 @@
-import { SensorData, AnomalyResponse } from '@/types/sensor';
+import { SensorData, AnomalyResponse, PredictionData, ForecastData } from '@/types/sensor';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
@@ -42,5 +42,17 @@ export async function fetchHistory(params?: {
 export async function fetchAnomaly(): Promise<AnomalyResponse> {
   const res = await fetchWithTimeout(`${API_BASE}/api/anomaly`);
   if (!res.ok) throw new Error('Failed to fetch anomaly');
+  return res.json();
+}
+
+export async function fetchPrediction(): Promise<PredictionData> {
+  const res = await fetchWithTimeout(`${API_BASE}/api/prediction`);
+  if (!res.ok) throw new Error('Failed to fetch prediction');
+  return res.json();
+}
+
+export async function fetchForecast(): Promise<ForecastData> {
+  const res = await fetchWithTimeout(`${API_BASE}/api/forecast`);
+  if (!res.ok) throw new Error('Failed to fetch forecast');
   return res.json();
 }

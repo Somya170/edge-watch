@@ -25,3 +25,32 @@ export interface AnomalyResponse {
   healthScore: number;
   alerts: Alert[];
 }
+
+export type FaultType = 'bearing fault' | 'misalignment' | 'imbalance' | 'none';
+
+export interface PredictionData {
+  failure_risk: number;
+  rul_hours: number;
+  status: MachineStatus;
+  fault_type: FaultType;
+  confidence: number;
+}
+
+export interface ForecastPoint {
+  timestamp: number;
+  value: number;
+  predicted: boolean;
+}
+
+export interface ForecastData {
+  vRMSy: ForecastPoint[];
+  temperature: ForecastPoint[];
+  healthScore: ForecastPoint[];
+}
+
+export interface Recommendation {
+  id: string;
+  message: string;
+  priority: 'high' | 'medium' | 'low';
+  category: 'maintenance' | 'risk' | 'optimization';
+}
