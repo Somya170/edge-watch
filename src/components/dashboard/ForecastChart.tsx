@@ -17,12 +17,14 @@ const formatTime = (ts: number) => {
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
-  const point = payload[0]?.payload as ForecastPoint;
+  const entry = payload.find((p: any) => p.value != null);
+  if (!entry) return null;
+  const isPredicted = entry.dataKey === 'predicted';
   return (
     <div className="bg-card border border-border rounded-lg p-3 shadow-xl">
       <p className="text-xs text-muted-foreground mb-1 font-mono">{formatTime(label)}</p>
-      <p className="text-xs font-medium" style={{ color: payload[0]?.color }}>
-        {point.predicted ? '🔮 Predicted: ' : 'Actual: '}{payload[0]?.value?.toFixed(2)}
+      <p className="text-xs font-medium" style={{ color: entry.color }}>
+        {isPredicted ? '🔮 Predicted: ' : 'Actual: '}{entry.value?.toFixed(2)}
       </p>
     </div>
   );
@@ -30,10 +32,17 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 const ForecastChart = ({ data, title, color, unit }: ForecastChartProps) => {
   const nowTs = data.find(d => d.predicted)?.timestamp;
-  const actual = data.filter(d => !d.predicted);
-  const predicted = data.filter(d => d.predicted);
-  const lastActual = actual[actual.length - 1];
-  const combined = lastActual ? [...actual, { ...lastActual, predicted: true }, ...predicted] : [...actual, ...predicted];
+
+  // Transform data: split into "actual" and "predicted" keys
+  // For the bridge point, both keys have values
+  const chartData = data.map((point, i, arr) => {
+    const isLast = !point.predicted && arr[i + 1]?.predicted;
+    return {
+      timestamp: point.timestamp,
+      actual: !point.predicted ? point.value : undefined,
+      predicted: point.predicted ? point.value : isLast ? point.value : undefined,
+    };
+  });
 
   return (
     <div className="glow-card rounded-xl bg-card p-5">
@@ -49,7 +58,7 @@ const ForecastChart = ({ data, title, color, unit }: ForecastChartProps) => {
         </div>
       </div>
       <ResponsiveContainer width="100%" height={220}>
-        <LineChart data={combined}>
+        <LineChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 14% 16%)" />
           <XAxis
             dataKey="timestamp"
@@ -73,20 +82,21 @@ const ForecastChart = ({ data, title, color, unit }: ForecastChartProps) => {
           )}
           <Line
             type="monotone"
-            dataKey="value"
+            dataKey="actual"
             stroke={color}
             strokeWidth={2}
             dot={false}
+            connectNulls={false}
             animationDuration={300}
           />
           <Line
             type="monotone"
-            data={predicted.length > 0 ? [lastActual ? { ...lastActual, predicted: true } : predicted[0], ...predicted] : []}
-            dataKey="value"
+            dataKey="predicted"
             stroke={color}
             strokeWidth={2}
             strokeDasharray="6 3"
             dot={false}
+            connectNulls={false}
             animationDuration={300}
           />
         </LineChart>
