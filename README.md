@@ -1,4 +1,4 @@
-# 🏭 Shopfloor Copilot
+# 🏭 EDGEAI- Predictive Maintainance
 
 ![Version](https://img.shields.io/badge/version-1.0.0-red)
 ![Platform](https://img.shields.io/badge/platform-Jetson%20AGX%20Orin-green)
