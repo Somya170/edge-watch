@@ -1,53 +1,66 @@
 import { Activity, Thermometer, Volume2, Heart } from 'lucide-react';
-import { SensorData, AnomalyResponse, MachineStatus } from '@/types/sensor';
+
+type MachineStatus = 'normal' | 'warning' | 'critical';
 
 interface StatusCardsProps {
-  data: SensorData | null;
-  anomaly: AnomalyResponse;
-  isLoading: boolean;
+  data: any; // 🔥 relaxed type (avoid crash)
 }
 
 function statusColor(status: MachineStatus) {
-  if (status === 'critical') return 'status-critical';
-  if (status === 'warning') return 'status-warning';
-  return 'status-normal';
+  if (status === 'critical') return 'text-red-500';
+  if (status === 'warning') return 'text-yellow-400';
+  return 'text-green-400';
 }
 
 function statusBg(status: MachineStatus) {
-  if (status === 'critical') return 'bg-status-critical';
-  if (status === 'warning') return 'bg-status-warning';
-  return 'bg-status-normal';
+  if (status === 'critical') return 'bg-red-500/20';
+  if (status === 'warning') return 'bg-yellow-400/20';
+  return 'bg-green-400/20';
 }
 
-function Skeleton() {
-  return <div className="h-10 w-24 bg-muted animate-pulse rounded-md" />;
-}
+const StatusCards = ({ data }: StatusCardsProps) => {
 
-const StatusCards = ({ data, anomaly, isLoading }: StatusCardsProps) => {
+  // 🔥 SAFE VALUES
+  const temperature = data?.temperature ?? 0;
+  const acoustic = data?.aucausticRMS ?? 0; // ✅ FIXED
+
+  // 🔥 SIMPLE LOGIC (temporary AI)
+  const healthScore = Math.max(0, 100 - (temperature + acoustic) / 2);
+
+  let machineStatus: MachineStatus = 'normal';
+  if (temperature > 35 || acoustic > 60) machineStatus = 'critical';
+  else if (temperature > 30 || acoustic > 55) machineStatus = 'warning';
+
   const cards = [
     {
       label: 'Health Score',
-      value: `${Math.round(anomaly.healthScore)}%`,
+      value: `${Math.round(healthScore)}%`,
       icon: Heart,
-      status: anomaly.status,
+      status: machineStatus,
     },
     {
       label: 'Machine Status',
-      value: anomaly.status.charAt(0).toUpperCase() + anomaly.status.slice(1),
+      value: machineStatus.charAt(0).toUpperCase() + machineStatus.slice(1),
       icon: Activity,
-      status: anomaly.status,
+      status: machineStatus,
     },
     {
       label: 'Temperature',
-      value: data ? `${data.temperature.toFixed(1)}°C` : '--',
+      value: data ? `${temperature.toFixed(1)}°C` : '--',
       icon: Thermometer,
-      status: data && data.temperature > 33 ? 'critical' as MachineStatus : data && data.temperature > 30 ? 'warning' as MachineStatus : 'normal' as MachineStatus,
+      status:
+        temperature > 35 ? 'critical' :
+        temperature > 30 ? 'warning' :
+        'normal',
     },
     {
       label: 'Acoustic RMS',
-      value: data ? `${data.acousticRMS.toFixed(1)} dB` : '--',
+      value: data ? `${acoustic.toFixed(1)} dB` : '--',
       icon: Volume2,
-      status: data && data.acousticRMS > 58 ? 'warning' as MachineStatus : 'normal' as MachineStatus,
+      status:
+        acoustic > 60 ? 'critical' :
+        acoustic > 55 ? 'warning' :
+        'normal',
     },
   ];
 
@@ -58,23 +71,30 @@ const StatusCards = ({ data, anomaly, isLoading }: StatusCardsProps) => {
           key={card.label}
           className="glow-card rounded-xl bg-card p-5 transition-all duration-300 hover:scale-[1.02]"
         >
+          {/* Header */}
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{card.label}</span>
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              {card.label}
+            </span>
             <div className={`p-1.5 rounded-lg ${statusBg(card.status)}`}>
               <card.icon size={14} className={statusColor(card.status)} />
             </div>
           </div>
-          {isLoading ? (
-            <Skeleton />
-          ) : (
-            <div className={`text-3xl font-bold tracking-tight ${statusColor(card.status)} transition-colors duration-500`}>
-              {card.value}
-            </div>
-          )}
+
+          {/* Value */}
+          <div className={`text-3xl font-bold tracking-tight ${statusColor(card.status)}`}>
+            {card.value}
+          </div>
+
+          {/* Status text */}
           <div className="mt-2 flex items-center gap-1.5">
-            <div className={`w-1.5 h-1.5 rounded-full ${statusColor(card.status)} glow-dot animate-pulse-glow`} />
+            <div className={`w-1.5 h-1.5 rounded-full ${statusColor(card.status)} animate-pulse`} />
             <span className={`text-xs ${statusColor(card.status)}`}>
-              {card.status === 'normal' ? 'Operating normally' : card.status === 'warning' ? 'Attention needed' : 'Immediate action'}
+              {card.status === 'normal'
+                ? 'Operating normally'
+                : card.status === 'warning'
+                ? 'Attention needed'
+                : 'Immediate action'}
             </span>
           </div>
         </div>

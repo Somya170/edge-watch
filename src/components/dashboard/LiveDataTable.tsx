@@ -1,10 +1,11 @@
-import { SensorData } from '@/types/sensor';
+import React from 'react';
 
 interface LiveDataTableProps {
-  data: SensorData[];
+  data: any[]; // 🔥 relaxed type
 }
 
 const formatTime = (ts: number) => {
+  if (!ts) return '--';
   const d = new Date(ts);
   return d.toLocaleTimeString('en-US', { hour12: false });
 };
@@ -18,49 +19,79 @@ const columns = [
   { key: 'vRMSy', label: 'vRMS-Y' },
   { key: 'vRMSz', label: 'vRMS-Z' },
   { key: 'temperature', label: 'Temp (°C)' },
-  { key: 'acousticRMS', label: 'Acoustic' },
+  { key: 'aucausticRMS', label: 'Acoustic' }, // 🔥 FIXED
 ] as const;
 
 function getCellColor(key: string, value: number): string {
-  if (key === 'temperature' && value > 33) return 'status-critical';
-  if (key === 'temperature' && value > 30) return 'status-warning';
-  if (key === 'vRMSy' && value > 1.2) return 'status-warning';
-  if (key === 'acousticRMS' && value > 58) return 'status-warning';
+  if (!value) return 'text-foreground';
+
+  if (key === 'temperature' && value > 35) return 'text-red-500';
+  if (key === 'temperature' && value > 30) return 'text-yellow-400';
+
+  if (key === 'vRMSy' && value > 1.2) return 'text-yellow-400';
+
+  if (key === 'aucausticRMS' && value > 60) return 'text-red-500';
+  if (key === 'aucausticRMS' && value > 55) return 'text-yellow-400';
+
   return 'text-foreground';
 }
 
-const LiveDataTable = ({ data }: LiveDataTableProps) => {
+const LiveDataTable = ({ data = [] }: LiveDataTableProps) => {
+
   const recent = [...data].reverse().slice(0, 15);
 
   return (
     <div className="glow-card rounded-xl bg-card p-5">
-      <h3 className="text-sm font-semibold text-foreground mb-4">Live Sensor Data</h3>
+      <h3 className="text-sm font-semibold text-foreground mb-4">
+        Live Sensor Data
+      </h3>
+
       <div className="overflow-x-auto scrollbar-thin">
         <table className="w-full text-xs">
+          
+          {/* HEADER */}
           <thead>
             <tr className="border-b border-border">
               {columns.map(col => (
-                <th key={col.key} className="py-2 px-3 text-left text-muted-foreground font-medium uppercase tracking-wider whitespace-nowrap">
+                <th
+                  key={col.key}
+                  className="py-2 px-3 text-left text-muted-foreground font-medium uppercase tracking-wider whitespace-nowrap"
+                >
                   {col.label}
                 </th>
               ))}
             </tr>
           </thead>
+
+          {/* BODY */}
           <tbody>
             {recent.map((row, i) => (
               <tr
-                key={row.timestamp}
-                className={`border-b border-border/50 transition-colors hover:bg-secondary/30 ${i === 0 ? 'bg-primary/5' : ''}`}
+                key={row.timestamp || i}
+                className={`border-b border-border/50 transition-colors hover:bg-secondary/30 ${
+                  i === 0 ? 'bg-primary/5' : ''
+                }`}
               >
                 {columns.map(col => {
-                  const value = row[col.key as keyof SensorData];
-                  const formatted = 'format' in col && col.format
-                    ? col.format(value as number)
-                    : typeof value === 'number' ? value.toFixed(3) : String(value);
+                  const value = row[col.key];
+
+                  let formatted = '--';
+
+                  if ('format' in col && col.format) {
+                    formatted = col.format(value);
+                  } else if (typeof value === 'number') {
+                    formatted = value.toFixed(3);
+                  } else if (value !== undefined && value !== null) {
+                    formatted = String(value);
+                  }
+
                   return (
                     <td
                       key={col.key}
-                      className={`py-2 px-3 font-mono whitespace-nowrap ${getCellColor(col.key, value as number)}`}
+                      className={`py-2 px-3 font-mono whitespace-nowrap ${getCellColor(
+                        col.key,
+                        Number(value)
+                      )}`}
                     >
                       {formatted}
                     </td>
@@ -69,6 +100,7 @@ const LiveDataTable = ({ data }: LiveDataTableProps) => {
               </tr>
             ))}
           </tbody>
+
         </table>
       </div>
     </div>

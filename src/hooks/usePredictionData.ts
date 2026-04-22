@@ -14,23 +14,24 @@ export function usePredictionData(useMock: boolean) {
 
   const poll = useCallback(async () => {
     try {
-      if (useMock) {
-        setPrediction(generateMockPrediction());
-        setForecast(generateMockForecast());
-        setRecommendations(generateMockRecommendations());
-      } else {
-        try {
-          const [pred, fc] = await Promise.all([fetchPrediction(), fetchForecast()]);
-          setPrediction(pred);
-          setForecast(fc);
-          // Recommendations could come from another endpoint; mock for now
-          setRecommendations(generateMockRecommendations());
-        } catch {
-          setPrediction(generateMockPrediction());
-          setForecast(generateMockForecast());
-          setRecommendations(generateMockRecommendations());
+      let pred, fc;
+
+      try {
+        if (!useMock) {
+          [pred, fc] = await Promise.all([
+            fetchPrediction(),
+            fetchForecast()
+          ]);
         }
+      } catch (err) {
+        console.log("API failed, using mock");
       }
+
+      // ALWAYS fallback safe
+      setPrediction(pred || generateMockPrediction());
+      setForecast(fc || generateMockForecast());
+      setRecommendations(generateMockRecommendations());
+
       setIsLoading(false);
     } catch {
       setIsLoading(false);

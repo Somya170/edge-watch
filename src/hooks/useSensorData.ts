@@ -6,6 +6,7 @@ import { generateMockSensorData, generateMockAnomaly } from '@/services/mockData
 const MAX_CHART_POINTS = 30;
 const POLL_INTERVAL = 2000;
 
+
 export function useSensorData() {
   const [currentData, setCurrentData] = useState<SensorData | null>(null);
   const [chartHistory, setChartHistory] = useState<SensorData[]>([]);

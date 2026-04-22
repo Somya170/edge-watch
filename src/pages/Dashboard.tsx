@@ -1,16 +1,19 @@
-import { useSensorData } from '@/hooks/useSensorData';
-import { usePredictionData } from '@/hooks/usePredictionData';
+import { useState, useEffect } from "react";
 import TopBar from '@/components/dashboard/TopBar';
 import StatusCards from '@/components/dashboard/StatusCards';
 import SensorChart from '@/components/dashboard/SensorChart';
 import AlertPanel from '@/components/dashboard/AlertPanel';
 import LiveDataTable from '@/components/dashboard/LiveDataTable';
+
+// 🔥 AI imports wapas la
+import { usePredictionData } from '@/hooks/usePredictionData';
 import PredictionCard from '@/components/dashboard/PredictionCard';
 import ForecastChart from '@/components/dashboard/ForecastChart';
-import FaultDetection from '@/components/dashboard/FaultDetection';
 import HealthTrend from '@/components/dashboard/HealthTrend';
+import FaultDetection from '@/components/dashboard/FaultDetection';
 import RecommendationPanel from '@/components/dashboard/RecommendationPanel';
 
+// 🔥 Lines config
 const velocityLines = [
   { key: 'vRMSx' as const, color: '#3b82f6', label: 'vRMS-X' },
   { key: 'vRMSy' as const, color: '#22d3ee', label: 'vRMS-Y' },
@@ -28,64 +31,108 @@ const tempLines = [
 ];
 
 const acousticLines = [
-  { key: 'acousticRMS' as const, color: '#8b5cf6', label: 'Acoustic RMS' },
+  { key: 'aucausticRMS' as const, color: '#8b5cf6', label: 'Acoustic RMS' },
 ];
 
 const Dashboard = () => {
-  const { currentData, chartHistory, anomaly, alerts, isConnected, isLoading, useMock } = useSensorData();
-  const { prediction, forecast, recommendations, isLoading: predLoading } = usePredictionData(useMock);
+
+  const [data, setData] = useState<any>({});
+  const [history, setHistory] = useState<any[]>([]);
+
+  // 🔥 AI hook wapas la
+  const { prediction, forecast, recommendations, isLoading } = usePredictionData(false);
+
+  useEffect(() => {
+    const fetchData = () => {
+      fetch("http://127.0.0.1:5005/api/live-data")
+        .then(res => res.json())
+        .then(res => {
+          const newData = {
+            ...res,
+            timestamp: Date.now(),
+          };
+
+          setData(newData);
+
+          setHistory(prev => [
+            ...prev.slice(-20),
+            newData,
+          ]);
+        })
+        .catch(err => console.log(err));
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 2000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
-      <TopBar isConnected={isConnected} useMock={useMock} />
+
+      <TopBar isConnected={true} useMock={false} />
 
       <main className="p-4 lg:p-6 space-y-6 max-w-[1600px] mx-auto">
-        {/* Machine Status */}
-        <StatusCards data={currentData} anomaly={anomaly} isLoading={isLoading} />
 
-        {/* AI Predictions Section */}
+        {/* 🔥 STATUS */}
+        <StatusCards data={data} anomaly={prediction} isLoading={isLoading} />
+
+        {/* 🔥 AI SECTION */}
         <div>
-          <h2 className="text-sm font-semibold text-accent uppercase tracking-wider mb-3 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-            AI Predictive Analytics
+          <h2 className="text-sm font-semibold text-accent uppercase mb-3">
+            AI Predictive Maintenance
           </h2>
-          <PredictionCard data={prediction} isLoading={predLoading} />
+
+          <PredictionCard data={prediction} isLoading={isLoading} />
         </div>
 
-        {/* AI Forecast Charts */}
+        {/* 🔥 FORECAST */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {forecast?.vRMSy && (
-            <ForecastChart data={forecast.vRMSy} title="Vibration Forecast (Y-axis)" color="#22d3ee" />
-          )}
-          {forecast?.temperature && (
-            <ForecastChart data={forecast.temperature} title="Temperature Forecast" color="#f97316" unit="°C" />
-          )}
-          {forecast?.healthScore && (
-            <HealthTrend data={forecast.healthScore} />
-          )}
+          <ForecastChart
+            data={forecast?.vRMSy || history}
+            title="Vibration Forecast"
+            color="#22d3ee"
+          />
+
+          <ForecastChart
+            data={forecast?.temperature || history}
+            title="Temperature Forecast"
+            color="#f97316"
+          />
+
+          <HealthTrend data={forecast?.healthScore || history} />
         </div>
 
-        {/* Fault Detection + Recommendations */}
+        {/* 🔥 FAULT + RECOMMENDATION */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <FaultDetection data={prediction} />
           <RecommendationPanel data={recommendations} />
         </div>
 
-        {/* Real-time Charts + Alerts */}
+        {/* 🔥 LIVE CHARTS */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
           <div className="lg:col-span-3 space-y-6">
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <SensorChart data={chartHistory} title="Velocity RMS" lines={velocityLines} />
-              <SensorChart data={chartHistory} title="Acceleration RMS" lines={accelLines} />
-              <SensorChart data={chartHistory} title="Temperature" lines={tempLines} />
-              <SensorChart data={chartHistory} title="Acoustic RMS" lines={acousticLines} />
+
+              <SensorChart data={history} title="Velocity RMS" lines={velocityLines} />
+              <SensorChart data={history} title="Acceleration RMS" lines={accelLines} />
+              <SensorChart data={history} title="Temperature" lines={tempLines} />
+              <SensorChart data={history} title="Acoustic RMS" lines={acousticLines} />
+
             </div>
-            <LiveDataTable data={chartHistory} />
+
+            <LiveDataTable data={history} />
+
           </div>
+
           <div className="lg:col-span-1">
-            <AlertPanel alerts={alerts} />
+            <AlertPanel alerts={[]} />
           </div>
+
         </div>
+
       </main>
     </div>
   );
