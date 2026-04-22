@@ -84,13 +84,6 @@ Includes:
 
 ---
 
-## 📸 Dashboard Preview
-
-### 🔹 Main Dashboard
-(Add your screenshot here)
-
-### 🔹 Predictive Maintenance
-(Add your screenshot here)
 
 ---
 
@@ -99,8 +92,8 @@ Includes:
 ### 1. Clone repo
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/shopfloor-copilot.git
-cd shopfloor-copilot
+git clone https://github.com/YOUR_USERNAME/edge-watch.git
+cd edge-watch
 
 ---
 
@@ -151,23 +144,13 @@ Includes:
 
 ---
 
-## 📸 Dashboard Preview
-
-### 🔹 Main Dashboard
-(Add your screenshot here)
-
-### 🔹 Predictive Maintenance
-(Add your screenshot here)
-
----
-
 ## 🖥️ Installation (Jetson / Linux)
 
 ### 1. Clone repo
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/shopfloor-copilot.git
-cd shopfloor-copilot
+git clone https://github.com/YOUR_USERNAME/edge-watch.git
+cd edge-watch
 2. Backend Setup
 cd backend
 python3 -m venv venv
@@ -223,7 +206,7 @@ Edge optimization
 
 👨‍💻 Developed By
 
-Yash Technologies
+Somya Jaiswal
 
 📜 License
 
@@ -232,39 +215,6 @@ Proprietary – Internal Use Only
 
 ---
 
-# 🖼️ Logo Add Karna (IMPORTANT)
 
-Bhai tu jo logo screenshot me dikha raha hai, usko bhi add kar:
 
-### Step:
-1. repo me folder bana:
-/assets/logo.png
 
-2. README ke top me add kar:
-
-```md
-<p align="center">
-  <img src="assets/logo.png" width="120" />
-</p>
-🚀 Git Commands (Upload to GitHub)
-
-git init
-git add .
-git commit -m "Initial commit - Shopfloor Copilot"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/shopfloor-copilot.git
-git push -u origin main
-
-⚡ Final Advice (important)
-
-Bhai sach bolu toh 👇
-
-UI 🔥 done
-MQTT 🔥 done
-Predictive section 🔥 UI done
-
-👉 Bas ek kaam bacha hai:
-REAL AI MODEL lagana
-
-Tab tera project:
-👉 internship level → product level ban jayega
