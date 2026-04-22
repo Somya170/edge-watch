@@ -1,228 +1,270 @@
-# 🚀 EDGE AI – Predictive Maintenance Dashboard
+# 🏭 Shopfloor Copilot
 
-An industrial-grade **real-time predictive maintenance system** that monitors machine health using sensor data (MQTT), processes it via a Flask backend, and visualizes insights through a modern React dashboard.
-
----
-
-## 🏭 Project Overview
-
-This project is designed for **manufacturing industries** to monitor machine conditions and prevent unexpected failures.
-
-It collects real-time sensor data such as:
-
-* Vibration (Acceleration & Velocity RMS)
-* Temperature
-* Acoustic signals
-
-Using this data, the system:
-
-* Displays live machine status
-* Detects anomalies
-* Provides predictive maintenance insights
-* Visualizes trends and forecasts
+![Version](https://img.shields.io/badge/version-1.0.0-red)
+![Platform](https://img.shields.io/badge/platform-Jetson%20AGX%20Orin-green)
+![Frontend](https://img.shields.io/badge/frontend-React%20+%20Vite-blue)
+![Backend](https://img.shields.io/badge/backend-Flask-orange)
+![Protocol](https://img.shields.io/badge/protocol-MQTT-purple)
+![License](https://img.shields.io/badge/license-Proprietary-lightgrey)
 
 ---
 
-## 🎯 Key Features
+## 🚀 AI-Powered Industrial Monitoring Platform
 
-### 🔴 Real-Time Monitoring
-
-* Live data streaming via MQTT
-* Continuous updates every 2 seconds
-* Interactive charts and tables
-
-### 📊 Advanced Visualization
-
-* Velocity & Acceleration RMS graphs
-* Temperature & Acoustic monitoring
-* Fullscreen expandable charts
-* Dark industrial UI
-
-### 🤖 Predictive Maintenance
-
-* Health Score calculation
-* Failure Risk estimation
-* Remaining Useful Life (RUL)
-* AI-based fault detection
-
-### ⚠️ Alerts & Recommendations
-
-* AI fault detection (e.g., bearing fault)
-* Smart maintenance suggestions
-* Priority-based recommendations
+> Real-time machine monitoring + Predictive Maintenance dashboard  
+> Built for **Industry 4.0 on Edge Devices (Jetson)**
 
 ---
 
-## 🧠 System Architecture
+## 🧠 Features
 
-```
-Sensors → MQTT Broker → Flask Backend → REST API → React Frontend
-```
-
-### Flow:
-
-1. Sensors send data via MQTT
-2. Flask subscribes to MQTT topics
-3. Backend processes & stores latest data
-4. Frontend fetches via API
-5. Dashboard updates in real-time
+- 📡 Real-time sensor data via **MQTT**
+- 📊 Live dashboards (Velocity, Acceleration, Temp, Acoustic)
+- 🧠 AI Predictive Maintenance
+- ⚠️ Fault Detection (Bearing fault etc.)
+- 📈 Forecast graphs (Vibration, Temperature, Health)
+- 💡 AI Recommendations system
+- 📋 Live data table
+- 📱 Fullscreen interactive charts (tap to expand)
+- 🌙 Dark industrial UI theme
 
 ---
 
-## 🛠️ Tech Stack
+## 🏗️ System Architecture
+Sensors → MQTT Broker → Flask Backend → React Frontend
+↓
+AI Model / Predictions
+
+---
+
+## ⚙️ Tech Stack
 
 ### Frontend
-
-* React + TypeScript
-* Tailwind CSS
-* Recharts
-* Vite
+- React (Vite)
+- TypeScript
+- Tailwind CSS
+- Recharts (graphs)
+- ShadCN UI
 
 ### Backend
+- Python
+- Flask
+- Paho MQTT
 
-* Python
-* Flask
-* MQTT (paho-mqtt)
-
-### AI / ML
-
-* (Currently Mock / Placeholder)
-* Planned: Anomaly Detection (Isolation Forest)
+### Hardware
+- NVIDIA Jetson (Edge AI)
 
 ---
 
-## 📡 API Endpoints
+## 📡 Data Flow
 
-### 🔹 Get Live Data
-
-```
-GET /api/live-data
-```
-
-### 🔹 Get Prediction Data
-
-```
-GET /api/prediction
-```
-
-### 🔹 Get Forecast Data
-
-```
-GET /api/forecast
-```
+1. Sensors send data via MQTT
+2. Flask subscribes to topic
+3. Backend exposes API (`/api/live-data`)
+4. Frontend fetches every 2 sec
+5. Charts + cards update in real-time
 
 ---
 
-## ⚙️ Installation & Setup
+## 🤖 Predictive Maintenance
 
-### 1️⃣ Clone Repository
+Includes:
 
-```
-git clone https://github.com/Somya170/edge-watch.git
-cd edge-watch
-```
+- Health Score
+- Failure Risk %
+- Remaining Life (days)
+- AI Confidence
+- Fault Detection (e.g. Bearing Fault)
+- Forecast graphs
+- Recommendations
+
+⚠️ Currently:
+- Uses mock AI data (fallback)
+- Can be replaced with real ML model
 
 ---
 
-### 2️⃣ Backend Setup (Flask)
+## 📸 Dashboard Preview
 
-```
+### 🔹 Main Dashboard
+(Add your screenshot here)
+
+### 🔹 Predictive Maintenance
+(Add your screenshot here)
+
+---
+
+## 🖥️ Installation (Jetson / Linux)
+
+### 1. Clone repo
+
+```bash
+git clone https://github.com/YOUR_USERNAME/shopfloor-copilot.git
+cd shopfloor-copilot
+
+---
+
+## ⚙️ Tech Stack
+
+### Frontend
+- React (Vite)
+- TypeScript
+- Tailwind CSS
+- Recharts (graphs)
+- ShadCN UI
+
+### Backend
+- Python
+- Flask
+- Paho MQTT
+
+### Hardware
+- NVIDIA Jetson (Edge AI)
+
+---
+
+## 📡 Data Flow
+
+1. Sensors send data via MQTT
+2. Flask subscribes to topic
+3. Backend exposes API (`/api/live-data`)
+4. Frontend fetches every 2 sec
+5. Charts + cards update in real-time
+
+---
+
+## 🤖 Predictive Maintenance
+
+Includes:
+
+- Health Score
+- Failure Risk %
+- Remaining Life (days)
+- AI Confidence
+- Fault Detection (e.g. Bearing Fault)
+- Forecast graphs
+- Recommendations
+
+⚠️ Currently:
+- Uses mock AI data (fallback)
+- Can be replaced with real ML model
+
+---
+
+## 📸 Dashboard Preview
+
+### 🔹 Main Dashboard
+(Add your screenshot here)
+
+### 🔹 Predictive Maintenance
+(Add your screenshot here)
+
+---
+
+## 🖥️ Installation (Jetson / Linux)
+
+### 1. Clone repo
+
+```bash
+git clone https://github.com/YOUR_USERNAME/shopfloor-copilot.git
+cd shopfloor-copilot
+2. Backend Setup
 cd backend
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+
+Run:
 python app.py
-```
 
-Backend runs on:
-
-```
-http://127.0.0.1:5005
-```
-
----
-
-### 3️⃣ Frontend Setup (React)
-
-```
+3. Frontend Setup
 cd ..
 npm install
 npm run dev
-```
 
-Frontend runs on:
-
-```
+Open:
 http://localhost:8081
-```
 
----
+🔌 MQTT Configuration
 
-## 🔌 MQTT Configuration
-
-Update your MQTT credentials in backend:
-
-```
-broker_url = "YOUR_BROKER_URL"
+In backend:broker = "YOUR_BROKER_URL"
+port = 1883
 topic = "YOUR_TOPIC"
-username = "YOUR_USERNAME"
-password = "YOUR_PASSWORD"
-```
+username = "YOUR_USER"
+password = "YOUR_PASS"
 
----
 
-## 📊 Sample Data Format
+📊 API Endpoints
+| Endpoint          | Description        |
+| ----------------- | ------------------ |
+| `/api/live-data`  | Latest sensor data |
+| `/api/prediction` | AI prediction      |
+| `/api/forecast`   | Forecast data      |\
 
-```
+🧪 Example Sensor Data
 {
-  "timestamp": 83468,
   "aRMSx": 0.054,
   "aRMSy": 0.097,
   "aRMSz": 0.055,
-  "vRMSx": 0.667,
-  "vRMSy": 0.975,
-  "vRMSz": 0.703,
+  "vRMSx": 0.66,
+  "vRMSy": 0.97,
+  "vRMSz": 0.70,
   "temperature": 24.7,
   "acousticRMS": 54.8
 }
-```
+
+⚡ Future Improvements
+Real ML model integration
+Anomaly detection model (Isolation Forest / LSTM)
+Database (InfluxDB / PostgreSQL)
+Multi-machine support
+Alerts via SMS / Email
+Edge optimization
+
+👨‍💻 Developed By
+
+Yash Technologies
+
+📜 License
+
+Proprietary – Internal Use Only
+
 
 ---
 
-## 🖥️ Dashboard Sections
+# 🖼️ Logo Add Karna (IMPORTANT)
 
-* Machine Status Cards
-* AI Predictive Maintenance Panel
-* Forecast Charts
-* Fault Detection
-* Recommendations
-* Real-Time Charts
-* Live Data Table
+Bhai tu jo logo screenshot me dikha raha hai, usko bhi add kar:
 
----
+### Step:
+1. repo me folder bana:
+/assets/logo.png
 
-## 🔥 Future Improvements
+2. README ke top me add kar:
 
-* Train ML model on historical data
-* Implement anomaly detection
-* Add fault classification (bearing, misalignment)
-* Deploy on cloud (AWS / Azure)
-* Add user authentication
+```md
+<p align="center">
+  <img src="assets/logo.png" width="120" />
+</p>
+🚀 Git Commands (Upload to GitHub)
 
----
+git init
+git add .
+git commit -m "Initial commit - Shopfloor Copilot"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/shopfloor-copilot.git
+git push -u origin main
 
-## 👨‍💻 Author
+⚡ Final Advice (important)
 
-**Somya**
+Bhai sach bolu toh 👇
 
----
+UI 🔥 done
+MQTT 🔥 done
+Predictive section 🔥 UI done
 
-## ⭐ Contribution
+👉 Bas ek kaam bacha hai:
+REAL AI MODEL lagana
 
-Feel free to fork this repo and contribute to improve the system!
-
----
-
-## 📜 License
-
-This project is open-source and available under the MIT License.
+Tab tera project:
+👉 internship level → product level ban jayega
