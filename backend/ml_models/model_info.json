@@ -1,0 +1,26 @@
+{
+  "features": [
+    "aRMSx",
+    "aRMSy",
+    "aRMSz",
+    "vRMSx",
+    "vRMSy",
+    "vRMSz",
+    "temperature",
+    "aucausticRMS"
+  ],
+  "rf_accuracy": 0.9978,
+  "label_distribution": {
+    "0": 10838,
+    "2": 483,
+    "1": 111
+  },
+  "fault_map": {
+    "none": 0,
+    "bearing fault": 1,
+    "misalignment": 2,
+    "imbalance": 3,
+    "overheating": 4
+  },
+  "trained_on_rows": 11432
+}

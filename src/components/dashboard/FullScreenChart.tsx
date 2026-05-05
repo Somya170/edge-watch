@@ -28,10 +28,10 @@ const formatTime = (ts: number) => {
 };
 
 const TIME_RANGES = [
-  { label: '1 min', ms: 60_000 },
-  { label: '5 min', ms: 300_000 },
+  { label: '1 min',  ms: 60_000 },
+  { label: '5 min',  ms: 300_000 },
   { label: '1 hour', ms: 3_600_000 },
-  { label: 'All', ms: Infinity },
+  { label: 'All',    ms: Infinity },
 ];
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -41,7 +41,8 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <p className="text-xs text-muted-foreground mb-1.5 font-mono">{formatTime(label)}</p>
       {payload.map((entry: any) => (
         <p key={entry.dataKey} className="text-xs font-medium" style={{ color: entry.color }}>
-          {entry.name}: {entry.value?.toFixed(4)}
+          {/* ✅ FIX: entry.value string ho sakta hai CSV se — Number() se convert karo */}
+          {entry.name}: {Number(entry.value).toFixed(4)}
         </p>
       ))}
     </div>
@@ -57,7 +58,6 @@ const FullScreenChart = ({ open, onOpenChange, data, title, lines }: FullScreenC
   const [zoomDomain, setZoomDomain] = useState<[number, number] | null>(null);
   const pausedDataRef = useRef<SensorData[]>([]);
 
-  // When paused, freeze data
   if (paused) {
     if (pausedDataRef.current.length === 0) pausedDataRef.current = [...data];
   } else {
@@ -66,12 +66,10 @@ const FullScreenChart = ({ open, onOpenChange, data, title, lines }: FullScreenC
 
   const displayData = paused ? pausedDataRef.current : data;
 
-  // Apply time range filter
   const filteredData = timeRange === Infinity
     ? displayData
     : displayData.filter(d => d.timestamp >= Date.now() - timeRange);
 
-  // Apply zoom domain
   const chartData = zoomDomain
     ? filteredData.filter(d => d.timestamp >= zoomDomain[0] && d.timestamp <= zoomDomain[1])
     : filteredData;
@@ -94,7 +92,7 @@ const FullScreenChart = ({ open, onOpenChange, data, title, lines }: FullScreenC
 
   const handleMouseUp = useCallback(() => {
     if (refAreaLeft && refAreaRight) {
-      const left = Math.min(refAreaLeft, refAreaRight);
+      const left  = Math.min(refAreaLeft, refAreaRight);
       const right = Math.max(refAreaLeft, refAreaRight);
       if (right - left > 500) setZoomDomain([left, right]);
     }
@@ -112,9 +110,9 @@ const FullScreenChart = ({ open, onOpenChange, data, title, lines }: FullScreenC
     ]);
     const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
     a.download = `${title.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
@@ -150,6 +148,7 @@ const FullScreenChart = ({ open, onOpenChange, data, title, lines }: FullScreenC
               </button>
             )}
           </div>
+
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPaused(p => !p)}
@@ -187,7 +186,10 @@ const FullScreenChart = ({ open, onOpenChange, data, title, lines }: FullScreenC
                 }`}
                 style={{ color: line.color }}
               >
-                <span className="w-3 h-0.5 rounded" style={{ background: hidden ? 'currentColor' : line.color, opacity: hidden ? 0.3 : 1 }} />
+                <span
+                  className="w-3 h-0.5 rounded"
+                  style={{ background: hidden ? 'currentColor' : line.color, opacity: hidden ? 0.3 : 1 }}
+                />
                 {line.label}
               </button>
             );
@@ -218,10 +220,18 @@ const FullScreenChart = ({ open, onOpenChange, data, title, lines }: FullScreenC
               <YAxis
                 tick={{ fill: 'hsl(215 12% 50%)', fontSize: 11 }}
                 stroke="hsl(220 14% 16%)"
+                // ✅ FIX: YAxis tickFormatter bhi number convert karo
+                tickFormatter={(v) => Number(v).toFixed(2)}
               />
               <Tooltip content={<CustomTooltip />} />
               {refAreaLeft && refAreaRight && (
-                <ReferenceArea x1={refAreaLeft} x2={refAreaRight} strokeOpacity={0.3} fill="hsl(var(--accent))" fillOpacity={0.1} />
+                <ReferenceArea
+                  x1={refAreaLeft}
+                  x2={refAreaRight}
+                  strokeOpacity={0.3}
+                  fill="hsl(var(--accent))"
+                  fillOpacity={0.1}
+                />
               )}
               {lines.map(line =>
                 !hiddenLines.has(line.key) && (
@@ -247,6 +257,7 @@ const FullScreenChart = ({ open, onOpenChange, data, title, lines }: FullScreenC
             </LineChart>
           </ResponsiveContainer>
         </div>
+
       </DialogContent>
     </Dialog>
   );

@@ -1,6 +1,6 @@
 import { SensorData, AnomalyResponse, PredictionData, ForecastData } from '@/types/sensor';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5005';
 
 async function fetchWithTimeout(url: string, timeout = 5000): Promise<Response> {
   const controller = new AbortController();

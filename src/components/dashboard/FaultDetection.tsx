@@ -9,7 +9,7 @@ const faultLabels: Record<string, { label: string; icon: string }> = {
   'bearing fault': { label: 'Bearing Fault', icon: '⚙️' },
   'misalignment': { label: 'Misalignment', icon: '↔️' },
   'imbalance': { label: 'Imbalance', icon: '⚖️' },
-  'none': { label: 'No Fault Detected', icon: '✅' },
+  'none': { label: 'No Fault Detected', icon: ' ' },
 };
 
 const FaultDetection = ({ data }: FaultDetectionProps) => {
